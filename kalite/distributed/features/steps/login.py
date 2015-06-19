@@ -91,6 +91,7 @@ def impl(context):
 
 def fill_field(context, text, field_id):
     field = find_id_with_wait(context, field_id)
+    field.clear()
     field.send_keys(text)
 
 def fill_username(context, text):
@@ -107,4 +108,7 @@ def check_highlight(context, item):
 
 def check_single_popover(context, item):
     popover = find_id_with_wait(context, "id_{item}-popover".format(item=item))
-    return (len(context.browser.find_elements_by_class_name("popover")) == 1) and "popover" in popover.get_attribute("class")
+    assert popover, "Couldn't find the popover with id: id_{item}-popover".format(item=item)
+    num_popovers = len(context.browser.find_elements_by_class_name("popover"))
+    assert num_popovers == 1, "Expected 1 popover, found {0]".format(num_popovers)
+    return "popover" in popover.get_attribute("class")
